@@ -13,6 +13,7 @@ export default function AuthorRow({ fullName, linkText, onPressLinkText }) {
         initials={getInitials(fullName)}
         size={35}
         backgroundColor={getAvatarColor(fullName)}
+        // backgroundColor="#ff0000"
       />
       <Text style={styles.text} numberOfLines={1}>
         {fullName}
