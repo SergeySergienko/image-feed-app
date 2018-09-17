@@ -11,6 +11,11 @@ import PropTypes from "prop-types";
 import { fetchImages } from "../utils/api";
 import CardList from "../components/CardList";
 
+const items = [
+  { id: 0, author: "Matt Ross" },
+  { id: 1, author: "Chuck Norris" }
+];
+
 export default class Feed extends Component {
   state = {
     loading: true,
@@ -18,7 +23,10 @@ export default class Feed extends Component {
     items: []
   };
   static propTypes = {
-    style: ViewPropTypes.style
+    style: ViewPropTypes.style,
+    commentsForItem: PropTypes.objectOf(PropTypes.arrayOf(PropTypes.string))
+      .isRequired,
+    onPressComments: PropTypes.func.isRequired
   };
   static defaultProps = {
     style: null
@@ -39,17 +47,22 @@ export default class Feed extends Component {
   }
 
   render() {
-    const { style } = this.props;
-    const { loading, error, items } = this.state;
+    const { style, commentsForItem, onPressComments } = this.props;
+    const { loading, error } = this.state;
+    console.log(this.state.items);
     if (loading) {
       return <ActivityIndicator style={styles.container} size={"large"} />;
     }
     if (error) {
-      return <Text style={styles.container}>Error...</Text>;
+      return <Text>Error...</Text>;
     }
     return (
       <SafeAreaView style={style}>
-        <CardList items={items} />
+        <CardList
+          items={this.state.items || items}
+          commentsForItem={commentsForItem}
+          onPressComments={onPressComments}
+        />
       </SafeAreaView>
     );
   }

@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import { FlatList } from "react-native";
+import { FlatList, Text, View } from "react-native";
 
 import { getImageFromId } from "../utils/api";
 import Card from "./Card";
@@ -14,18 +14,31 @@ export default class CardList extends Component {
         id: PropTypes.number.isRequired,
         author: PropTypes.string.isRequired
       })
-    ).isRequired
+    ).isRequired,
+    commentsForItem: PropTypes.objectOf(PropTypes.arrayOf(PropTypes.string))
+      .isRequired,
+    onPressComments: PropTypes.func.isRequired
   };
-  renderItem = ({ item: { id, author } }) => (
-    <Card fullName={author} image={{ uri: getImageFromId(id) }} />
-  );
+  renderItem = ({ item: { id, author } }) => {
+    const { commentsForItem, onPressComments } = this.props;
+    const comments = commentsForItem[id];
+    return (
+      <Card
+        fullName={author}
+        image={{ uri: getImageFromId(id) }}
+        linkText={`${comments ? comments.length : 0} Comments`}
+        onPressLinkText={() => onPressComments(id)}
+      />
+    );
+  };
   render() {
-    const { items } = this.props;
+    const { items, commentsForItem } = this.props;
     return (
       <FlatList
         data={items}
         renderItem={this.renderItem}
         keyExtractor={keyExtractor}
+        extraData={commentsForItem}
       />
     );
   }

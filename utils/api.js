@@ -4,7 +4,7 @@ export const getImageFromId = id => {
 
 export const fetchImages = async () => {
   try {
-    const data = await fetch("https://unsplash.it/list");
+    const data = await fetch("https://picsum.photos/list");
     const json = await data.json();
     const items = json.map(item => {
       return {
@@ -12,6 +12,7 @@ export const fetchImages = async () => {
         author: item.author
       };
     });
+    // console.log(items);
     return items;
   } catch (e) {
     console.log(e);
